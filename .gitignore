@@ -1,0 +1,27 @@
+# Secrets et environnement
+.env
+*.env
+**/.env
+
+# Environnements virtuels et dépendances
+venv/
+**/venv/
+**/.meltano/
+**/dbt_packages/
+**/target/
+**/logs/
+
+# Données volumineuses / fichiers de test générés
+*.json
+!schemas/*.json
+**/test.csv
+forecast_meltano/output/
+
+# Projet exemple non utilisé
+jaffle_shop/
+
+# Système
+__pycache__/
+*.pyc
+.DS_Store
+Thumbs.db

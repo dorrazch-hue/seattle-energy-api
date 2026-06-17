@@ -1,0 +1,54 @@
+default_environment: dev
+project_id: 019eb668-f03f-7aee-bd19-216d6bc3bb7e
+environments:
+- name: dev
+- name: staging
+- name: prod
+plugins:
+  extractors:
+  - name: tap-csv
+    variant: meltanolabs
+    pip_url: git+https://github.com/MeltanoLabs/tap-csv.git
+    config:
+      files:
+      - entity: test
+        path: test.csv
+        keys: []
+  - name: tap-infoclimat
+    namespace: tap_infoclimat
+    pip_url: tap-rest-api-msdk
+    executable: tap-rest-api-msdk
+    config:
+      api_url: https://www.infoclimat.fr/opendata/
+      start_date: "2026-06-07T00:00:00Z"
+      params:
+        version: "2"
+        method: get
+        format: json
+        token: $TAP_INFOCLIMAT_TOKEN
+        start: "2026-06-07"
+        end: "2026-06-14"
+      streams:
+      - name: bergues
+        path: "?stations[]=000R5"
+        records_path: "$.hourly.\"000R5\"[*]"
+        primary_keys: ["dh_utc"]
+        replication_key: dh_utc
+        schema: schemas/bergues.json
+      - name: hazebrouck
+        path: "?stations[]=STATIC0010"
+        records_path: "$.hourly.\"STATIC0010\"[*]"
+        primary_keys: ["dh_utc"]
+        replication_key: dh_utc
+        schema: schemas/hazebrouck.json
+  loaders:
+  - name: target-postgres
+    variant: meltanolabs
+    pip_url: meltanolabs-target-postgres
+    config:
+      host: localhost
+      port: 5432
+      database: forecast_db
+      user: forecast_user
+      password: forecast_pass
+      default_target_schema: raw_infoclimat
