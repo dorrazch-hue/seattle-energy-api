@@ -1,0 +1,23 @@
+version: 2
+
+sources:
+  - name: raw_infoclimat
+    description: "Données météo brutes ingérées depuis l'API InfoClimat via Meltano"
+    schema: raw_infoclimat
+    tables:
+      - name: bergues
+        description: "Relevés météo bruts de la station InfoClimat de Bergues (000R5)"
+        loaded_at_field: _sdc_extracted_at
+        columns:
+          - name: dh_utc
+            description: "Horodatage UTC du relevé"
+          - name: id_station
+            description: "Identifiant de la station InfoClimat"
+      - name: hazebrouck
+        description: "Relevés météo bruts de la station InfoClimat de Hazebrouck (STATIC0010)"
+        loaded_at_field: _sdc_extracted_at
+        columns:
+          - name: dh_utc
+            description: "Horodatage UTC du relevé"
+          - name: id_station
+            description: "Identifiant de la station InfoClimat"

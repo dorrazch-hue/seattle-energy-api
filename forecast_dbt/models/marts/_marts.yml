@@ -1,0 +1,33 @@
+version: 2
+
+models:
+  - name: dim_weather_stations
+    description: "Dimension des stations météorologiques (InfoClimat et Weather Underground)"
+    columns:
+      - name: station_key
+        description: "Clé technique unique de la station"
+        tests:
+          - unique
+          - not_null
+      - name: station_id
+        description: "Identifiant officiel de la station dans son réseau d'origine"
+        tests:
+          - unique
+          - not_null
+
+  - name: fct_weather_observations
+    description: "Table de faits des observations météo, une ligne par relevé et par station"
+    columns:
+      - name: station_key
+        description: "Clé de la station, référence à dim_weather_stations"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_weather_stations')
+              field: station_key
+      - name: observed_at_utc
+        description: "Horodatage UTC du relevé météo"
+        tests:
+          - not_null
+      - name: temperature_celsius
+        description: "Température en degrés Celsius"
